@@ -29,6 +29,7 @@ actor User
 participant Client
 participant Server
 
+group #WhiteSmoke Предусловие
 User-> Client: отправить заявку
 activate Client
 Client -> Server: POST создание заявки
@@ -37,6 +38,7 @@ Server --> Client: Статус = "Принято"
 deactivate Server 
 Client --> User: заявка создана
 deactivate Client
+end group
 
 loop Short-Polling пока статус не терминирующий
     Client -> Server: GET /application/status?applicationId=...
@@ -55,7 +57,7 @@ end
 
 @enduml
 ```
-<img width="653" height="559" alt="image" src="https://github.com/user-attachments/assets/4bc7cf45-3150-4a56-8c9a-4681dcbf1eb7" />
+<img width="653" height="604" alt="image" src="https://github.com/user-attachments/assets/a11d772a-a851-4b77-839e-2bc564bdb91c" />
 
 ## OpenApi Specification 
 
