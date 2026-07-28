@@ -20,6 +20,41 @@
 * В компании используются стандартные временные метки в формате ISO 8601 timestamp.
 * Обычно в компании принято описывать ошибки 400, 404, 500.
 
+``` plantuml
+@startuml
+
+actor User
+participant Client
+participant Server
+
+User-> Client: отправить заявку
+activate Client
+Client -> Server: POST создание заявки
+activate Server
+Server --> Client: Статус = "Принято"
+deactivate Server 
+Client --> User: заявка создана
+deactivate Client
+
+loop Short-Polling пока статус не терминирующий
+    Client -> Server: GET /application/status?applicationId=...
+    activate Client 
+    activate Server
+    Server --> Client: ApplicationInfo (status, type)
+    deactivate Server 
+    opt статус != "Одобрено" или "Отклонено"
+        Client --> User: обновление статуса
+    end
+    opt статус == "Одобрено" или "Отклонено"
+        Client --> User: уведомление о финальном статусе
+        deactivate Client
+    end
+end
+
+@enduml
+```
+<img width="653" height="559" alt="image" src="https://github.com/user-attachments/assets/4bc7cf45-3150-4a56-8c9a-4681dcbf1eb7" />
+
 ```
 openapi: '3.0.3'
 info:
